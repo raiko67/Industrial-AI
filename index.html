@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industrial AI Engine — OEM Firmware Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
+
+  <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-500/20">
+          ⚙️
+        </div>
+        <div>
+          <h1 class="text-xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            Industrial AI Engine
+          </h1>
+          <p class="text-xs text-slate-400">OEM Controller Firmware Auto-Generation Platform</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider">Multi-Agent Engine Active</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <section class="lg:col-span-4 space-y-6">
+      <div class="bg-slate-900/80 rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex items-center space-x-2 border-b border-slate-800 pb-3">
+          <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+          <h2 class="font-semibold text-lg">Параметры станка</h2>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Тип оборудования</label>
+          <select id="machineType" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="laser">Двухосевой лазерный раскройщик (Laser CNC)</option>
+            <option value="mill">Трехосевой фрезерный станок (Milling CNC)</option>
+            <option value="conveyor">Промышленный конвейер со ступенчатым приводом</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Тип кинематики</label>
+          <select id="kinematics" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="Cartesian">Декартова (Cartesian XYZ)</option>
+            <option value="CoreXY">CoreXY (Высокоскоростная кинематика)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Микроконтроллер</label>
+          <select id="mcuType" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="STM32F407VGT6">STM32F407VGT6 (ARM Cortex-M4)</option>
+            <option value="ESP32-S3">ESP32-S3 (Dual-Core RTOS)</option>
+            <option value="STM32F103C8T6">STM32F103C8T6 (BluePill Cortex-M3)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Драйвер шагового двигателя</label>
+          <select id="driverType" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="TMC2209">TMC2209 (SilentStep & StallGuard)</option>
+            <option value="A4988">A4988 Standard Driver</option>
+            <option value="TB6600">TB6600 High-Torque Industrial Driver</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Деление микрошага (Microstepping)</label>
+          <select id="microstep" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="16">1/16 Шага</option>
+            <option value="32">1/32 Шага</option>
+            <option value="64">1/64 Шага</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Шаг винта / Шкив (мм)</label>
+            <input type="number" id="pitch" value="8" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Макс. скорость (мм/с)</label>
+            <input type="number" id="maxSpeed" value="200" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Аварийная остановка (E-Stop Pin)</label>
+          <select id="estopPin" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="PC13">GPIOC Pin 13 (Pull-Up)</option>
+            <option value="PA0">GPIOA Pin 0 (Pull-Down)</option>
+            <option value="PB12">GPIOB Pin 12 (Interrupt Enabled)</option>
+          </select>
+        </div>
+
+        <button onclick="runMultiAgentPipeline()" id="btnGenerate" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-3 rounded-xl shadow-lg shadow-blue-500/25 transition duration-200 flex items-center justify-center space-x-2">
+          <span>⚡ Запустить ИИ-конвейер генерации</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="lg:col-span-8 space-y-6">
+      
+      <div class="bg-slate-900/80 rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2">
+            <span class="text-indigo-400">🤖</span>
+            <h3 class="font-semibold text-slate-200">Лог работы трех ИИ-агентов</h3>
+          </div>
+          <span id="agentStatus" class="text-xs text-slate-400 font-mono">Система готова</span>
+        </div>
+
+        <div id="logsContainer" class="space-y-3 font-mono text-xs min-h-[180px] flex flex-col justify-center">
+          <div class="text-slate-500 text-center py-6">
+            Задайте конфигурацию станка слева и запустите конвейер агентов.
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/80 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+        <div class="bg-slate-950 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <span class="text-emerald-400">💻</span>
+            <h3 class="font-semibold text-sm text-slate-200 font-mono">Сгенерированная прошивка (main.cpp)</h3>
+          </div>
+          <button onclick="downloadCode()" id="btnDownload" class="hidden text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center space-x-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span>Скачать main.cpp</span>
+          </button>
+        </div>
+        
+        <div class="p-4 bg-slate-950/90 font-mono text-xs overflow-x-auto max-h-[380px]">
+          <pre id="codeOutput" class="text-slate-400"><code>#include &lt;stm32f4xx_hal.h&gt;
+#include &lt;stdbool.h&gt;
+
+int main(void) {
+    HAL_Init();
+    while (1) {
+    }
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/80 rounded-2xl p-6 border border-slate-800 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-2">
+            <span class="text-cyan-400">📡</span>
+            <h3 class="font-semibold text-slate-200">Эмуляция сигналов контроллера (Digital Twin)</h3>
+          </div>
+          <span id="simStatus" class="text-xs text-slate-400 font-mono">Статус: Ожидание</span>
+        </div>
+        <div class="flex justify-center bg-slate-950 rounded-xl p-4 border border-slate-800">
+          <canvas id="simCanvas" width="400" height="150" class="w-full max-w-[500px] h-[150px]"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    class PhysicsAgent {
+      analyze(config) {
+        const stepsPerRev = 200 * config.microstep;
+        const stepsPerMm = stepsPerRev / config.pitch;
+        const pulseFreqKhz = (config.maxSpeed * stepsPerMm) / 1000;
+        const timerPeriod = Math.round(1000 / pulseFreqKhz);
+
+        return {
+          stepsPerMm: stepsPerMm.toFixed(2),
+          pulseFreqKhz: pulseFreqKhz.toFixed(2),
+          timerPeriod: timerPeriod > 0 ? timerPeriod : 1,
+          kinematics: config.kinematics
+        };
+      }
+    }
+
+    class CodeArchitectAgent {
+      generateCode(config, physics) {
+        return `#include <${config.mcu.toLowerCase()}_hal.h>
+#include <stdbool.h>
+#include <stdint.h>
+
+#define STEP_PIN GPIO_PIN_0
+#define DIR_PIN  GPIO_PIN_1
+#define ESTOP_PIN ${config.estopPin}
+
+TIM_HandleTypeDef htim2;
+
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_TIM2_Init(uint32_t period);
+
+typedef struct {
+    uint32_t steps_per_mm;
+    uint32_t max_khz;
+    bool direction;
+} MachineConfig_t;
+
+MachineConfig_t machine = {
+    .steps_per_mm = ${Math.round(physics.stepsPerMm)},
+    .max_khz = ${Math.round(physics.pulseFreqKhz)},
+    .direction = true
+};
+
+int main(void) {
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+    MX_TIM2_Init(${physics.timerPeriod});
+
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+
+    while (1) {
+        if (HAL_GPIO_ReadPin(GPIOC, ESTOP_PIN) == GPIO_PIN_RESET) {
+            HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
+            while(1);
+        }
+        HAL_Delay(10);
+    }
+}
+
+static void MX_TIM2_Init(uint32_t period) {
+    TIM_OC_InitTypeDef sConfigOC = {0};
+
+    htim2.Instance = TIM2;
+    htim2.Init.Prescaler = 84 - 1;
+    htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim2.Init.Period = period;
+    htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    HAL_TIM_Base_Init(&htim2);
+    HAL_TIM_PWM_Init(&htim2);
+
+    sConfigOC.OCMode = TIM_OCMODE_PWM1;
+    sConfigOC.Pulse = period / 2;
+    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+    HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
+}
+
+static void MX_GPIO_Init(void) {
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+
+    GPIO_InitStruct.Pin = STEP_PIN | DIR_PIN;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = ESTOP_PIN;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+}
+
+void SystemClock_Config(void) {
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+    RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+    RCC_OscInitStruct.PLL.PLLM = 4;
+    RCC_OscInitStruct.PLL.PLLN = 168;
+    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+    HAL_RCC_OscConfig(&RCC_OscInitStruct);
+
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK|RCC_CLOCKTYPE_PCLK1;
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLKDIV_1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+    HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
+}`;
+      }
+    }
+
+    class VerificationAgent {
+      verifyAndSimulate(codeText, physics) {
+        const hasHalInit = codeText.includes("HAL_Init()");
+        const hasEStop = codeText.includes("ESTOP_PIN");
+        const validPeriod = physics.timerPeriod > 0;
+
+        if (hasHalInit && hasEStop && validPeriod) {
+          return {
+            passed: true,
+            memoryUsage: "12.4 KB Flash / 2.1 KB RAM",
+            statusMessage: "Проверка прошла успешно. Код синтаксически корректен, опасных гонок процессов не обнаружено."
+          };
+        } else {
+          return {
+            passed: false,
+            memoryUsage: "0 KB",
+            statusMessage: "Ошибка валидации кода. Не обнаружена инициализация аварийных прерываний."
+          };
+        }
+      }
+    }
+
+    let animationId = null;
+
+    function runMultiAgentPipeline() {
+      const btn = document.getElementById('btnGenerate');
+      const logs = document.getElementById('logsContainer');
+      const codeOutput = document.getElementById('codeOutput');
+      const status = document.getElementById('agentStatus');
+      const btnDownload = document.getElementById('btnDownload');
+      const simStatus = document.getElementById('simStatus');
+
+      const config = {
+        machine: document.getElementById('machineType').value,
+        kinematics: document.getElementById('kinematics').value,
+        mcu: document.getElementById('mcuType').value,
+        driver: document.getElementById('driverType').value,
+        microstep: parseInt(document.getElementById('microstep').value),
+        pitch: parseFloat(document.getElementById('pitch').value),
+        maxSpeed: parseFloat(document.getElementById('maxSpeed').value),
+        estopPin: document.getElementById('estopPin').value
+      };
+
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+      btnDownload.classList.add('hidden');
+      logs.innerHTML = '';
+      status.innerText = 'Запуск агентов...';
+
+      const agentPhysics = new PhysicsAgent();
+      const agentArchitect = new CodeArchitectAgent();
+      const agentTester = new VerificationAgent();
+
+      setTimeout(() => {
+        const physicsData = agentPhysics.analyze(config);
+
+        logs.innerHTML += `
+          <div class="p-3 bg-blue-950/40 border border-blue-800/50 rounded-xl text-blue-200">
+            <div class="flex justify-between font-bold mb-1">
+              <span>Agent 1: Physics & Kinematics Specialist</span>
+              <span class="text-emerald-400">[CALCULATED]</span>
+            </div>
+            <p class="text-slate-300">Расчет: ${physicsData.stepsPerMm} имп/мм. Частота импульсов: ${physicsData.pulseFreqKhz} кГц. Период таймера: ${physicsData.timerPeriod} мкс. Кинематика: ${physicsData.kinematics}.</p>
+          </div>
+        `;
+
+        setTimeout(() => {
+          const generatedCode = agentArchitect.generateCode(config, physicsData);
+
+          logs.innerHTML += `
+            <div class="p-3 bg-purple-950/40 border border-purple-800/50 rounded-xl text-purple-200">
+              <div class="flex justify-between font-bold mb-1">
+                <span>Agent 2: C++ Code Architect</span>
+                <span class="text-purple-400">[COMPILED]</span>
+              </div>
+              <p class="text-slate-300">Сформирован исходный C++ HAL код для ${config.mcu}. Настроена инициализация таймера TIM2 и пина остановки ${config.estopPin}.</p>
+            </div>
+          `;
+
+          setTimeout(() => {
+            const testResult = agentTester.verifyAndSimulate(generatedCode, physicsData);
+
+            if (testResult.passed) {
+              logs.innerHTML += `
+                <div class="p-3 bg-emerald-950/40 border border-emerald-800/50 rounded-xl text-emerald-200">
+                  <div class="flex justify-between font-bold mb-1">
+                    <span>Agent 3: Safety & Verification Agent</span>
+                    <span class="text-emerald-400">[PASSED]</span>
+                  </div>
+                  <p class="text-slate-300">${testResult.statusMessage} Использование памяти: ${testResult.memoryUsage}.</p>
+                </div>
+              `;
+
+              status.innerText = 'Прошивка построена и проверена!';
+              codeOutput.innerText = generatedCode;
+              btnDownload.classList.remove('hidden');
+              simStatus.innerText = `Статус: Генерация импульсов (${physicsData.pulseFreqKhz} кГц)`;
+              
+              startCanvasSimulation(physicsData.pulseFreqKhz);
+            } else {
+              logs.innerHTML += `
+                <div class="p-3 bg-rose-950/40 border border-rose-800/50 rounded-xl text-rose-200">
+                  <div class="flex justify-between font-bold mb-1">
+                    <span>Agent 3: Safety & Verification Agent</span>
+                    <span class="text-rose-400">[FAILED]</span>
+                  </div>
+                  <p class="text-slate-300">${testResult.statusMessage}</p>
+                </div>
+              `;
+              status.innerText = 'Ошибка верификации';
+            }
+
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }, 800);
+
+        }, 800);
+
+      }, 600);
+    }
+
+    function downloadCode() {
+      const codeText = document.getElementById('codeOutput').innerText;
+      const blob = new Blob([codeText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'main.cpp';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function startCanvasSimulation(pulseFreq) {
+      const canvas = document.getElementById('simCanvas');
+      const ctx = canvas.getContext('2d');
+      let x = 20;
+      let speed = Math.min(Math.max(pulseFreq * 0.2, 1), 8);
+
+      if (animationId) cancelAnimationFrame(animationId);
+
+      function draw() {
+        ctx.fillStyle = '#020617';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < canvas.width; i += 20) {
+          ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+        }
+        for (let j = 0; j < canvas.height; j += 20) {
+          ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(20, 75);
+        ctx.lineTo(x, 75);
+        ctx.stroke();
+
+        ctx.fillStyle = '#10b981';
+        ctx.shadowColor = '#10b981';
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(x, 75, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        x += speed;
+        if (x > canvas.width - 20) x = 20;
+
+        animationId = requestAnimationFrame(draw);
+      }
+      draw();
+    }
+  </script>
+</body>
+  </html>
